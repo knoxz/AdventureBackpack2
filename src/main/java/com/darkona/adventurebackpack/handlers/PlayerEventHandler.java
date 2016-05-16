@@ -298,7 +298,13 @@ public class PlayerEventHandler
             {
                 if (event.side.isServer())
                 {
-                    BackpackProperty.syncToNear(event.player);
+		// by removing this line nothing breaks except the player inventory isnt synced for every player on the server for every tick.
+		// this is a HUGE performance bottle neck with quadratic growth.
+		// 2 players = 2 packets / 4 player = 12 packets / 5 player = 16...
+		// this solves the issue. other players backpack rendering is now only updated when the player opens his backpack which is fine
+		// you could add a counter which counts every server tick and you could update like every 10(?) seconds.
+		// you have to do the counter in a different method and reference here because this methods is called more often the more player are online.
+                    //BackpackProperty.syncToNear(event.player);
 //                    if (Utils.notNullAndInstanceOf(event.player.openContainer, IWearableContainer.class))
 //                    {
 //                        //playerMP.sendContainerAndContentsToPlayer(playerMP.openContainer, playerMP.openContainer.getInventory());
